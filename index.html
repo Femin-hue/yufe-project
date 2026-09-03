@@ -1,1 +1,2891 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BLINK-IT! 👁️</title>
+
+<!-- ================= MEDIA PIPE ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+<!-- ================= FONTS ================= -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+
+<style>
+
+/* =====================================================
+   COLORS
+===================================================== */
+
+:root{
+
+    --cream:#fff9ef;
+
+    --paper:#fffdf8;
+
+    --pink:#ff6fae;
+
+    --pink-dark:#e73582;
+
+    --yellow:#ffd84d;
+
+    --blue:#8edcff;
+
+    --green:#9be7b1;
+
+    --purple:#cdb8ff;
+
+    --red:#ff6464;
+
+    --ink:#292038;
+
+}
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+
+html{
+    scroll-behavior:smooth;
+}
+
+
+body{
+
+    font-family:"DM Sans",sans-serif;
+
+    color:var(--ink);
+
+    background:
+
+        radial-gradient(
+            circle at 10% 10%,
+            #ffd6e8 0,
+            transparent 20%
+        ),
+
+        radial-gradient(
+            circle at 90% 15%,
+            #d8f5ff 0,
+            transparent 22%
+        ),
+
+        radial-gradient(
+            circle at 15% 80%,
+            #dff8e6 0,
+            transparent 20%
+        ),
+
+        radial-gradient(
+            circle at 90% 80%,
+            #fff0b5 0,
+            transparent 20%
+        ),
+
+        var(--cream);
+
+    overflow-x:hidden;
+}
+
+
+section{
+    width:100%;
+}
+
+
+.container{
+
+    width:min(1100px,92%);
+
+    margin:auto;
+
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    padding:25px 6%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    z-index:20;
+
+}
+
+
+.nav-logo{
+
+    font-family:"Bangers",cursive;
+
+    font-size:32px;
+
+    color:var(--pink-dark);
+
+    transform:rotate(-3deg);
+
+    text-shadow:2px 2px 0 var(--ink);
+
+    -webkit-text-stroke:1px var(--ink);
+
+}
+
+
+.nav-pill{
+
+    background:white;
+
+    padding:10px 18px;
+
+    border:2px solid var(--ink);
+
+    border-radius:30px;
+
+    box-shadow:3px 3px 0 var(--ink);
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:relative;
+
+    padding:80px 20px;
+
+    text-align:center;
+
+    overflow:hidden;
+
+}
+
+
+.hero-content{
+
+    max-width:850px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+.sticker{
+
+    display:inline-block;
+
+    background:var(--yellow);
+
+    border:3px solid var(--ink);
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:20px;
+
+    transform:rotate(-4deg);
+
+    box-shadow:4px 4px 0 var(--ink);
+
+    margin-bottom:25px;
+
+}
+
+
+.hero h1{
+
+    font-family:"Bangers",cursive;
+
+    font-size:clamp(90px,16vw,180px);
+
+    line-height:.8;
+
+    color:var(--pink);
+
+    letter-spacing:5px;
+
+    -webkit-text-stroke:4px var(--ink);
+
+    text-shadow:8px 8px 0 var(--ink);
+
+    transform:rotate(-3deg);
+
+}
+
+
+.hero h1 span{
+
+    color:var(--yellow);
+
+}
+
+
+.hero-subtitle{
+
+    margin:35px auto 0;
+
+    max-width:600px;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:27px;
+
+    line-height:1.2;
+
+}
+
+
+.hero-small{
+
+    margin-top:12px;
+
+    opacity:.65;
+
+    font-size:14px;
+
+}
+
+
+/* =====================================================
+   FLOATING DECORATIONS
+===================================================== */
+
+.doodle{
+
+    position:absolute;
+
+    font-size:55px;
+
+    animation:float 4s ease-in-out infinite;
+
+}
+
+
+.doodle.one{
+
+    top:20%;
+
+    left:8%;
+
+    transform:rotate(-15deg);
+
+}
+
+
+.doodle.two{
+
+    top:28%;
+
+    right:9%;
+
+    transform:rotate(15deg);
+
+    animation-delay:1s;
+
+}
+
+
+.doodle.three{
+
+    bottom:15%;
+
+    left:15%;
+
+    animation-delay:2s;
+
+}
+
+
+.doodle.four{
+
+    bottom:18%;
+
+    right:14%;
+
+    animation-delay:.5s;
+
+}
+
+
+@keyframes float{
+
+    0%,100%{
+        transform:translateY(0) rotate(-8deg);
+    }
+
+    50%{
+        transform:translateY(-15px) rotate(8deg);
+    }
+
+}
+
+
+/* =====================================================
+   SCROLL
+===================================================== */
+
+.scroll-btn{
+
+    position:absolute;
+
+    bottom:35px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    text-decoration:none;
+
+    color:var(--ink);
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+
+.scroll-arrow{
+
+    display:block;
+
+    margin:8px auto;
+
+    font-size:25px;
+
+    animation:bounce 1.5s infinite;
+
+}
+
+
+@keyframes bounce{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(8px);
+    }
+
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.intro{
+
+    padding:100px 0 60px;
+
+    text-align:center;
+
+}
+
+
+.section-label{
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:22px;
+
+    color:var(--pink-dark);
+
+}
+
+
+.intro h2{
+
+    font-family:"Bangers",cursive;
+
+    font-size:65px;
+
+    margin:8px 0;
+
+}
+
+
+.intro p{
+
+    max-width:650px;
+
+    margin:auto;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+    opacity:.75;
+
+}
+
+
+/* =====================================================
+   ARENA
+===================================================== */
+
+.arena{
+
+    padding:50px 0 100px;
+
+}
+
+
+.arena-title{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+
+.arena-title h2{
+
+    font-family:"Bangers",cursive;
+
+    font-size:70px;
+
+    letter-spacing:2px;
+
+}
+
+
+.arena-title p{
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:22px;
+
+}
+
+
+/* =====================================================
+   PLAYER NAME CARD
+===================================================== */
+
+.player-box{
+
+    max-width:600px;
+
+    margin:0 auto 45px;
+
+    padding:30px;
+
+    background:var(--paper);
+
+    border:3px solid var(--ink);
+
+    border-radius:25px;
+
+    text-align:center;
+
+    box-shadow:7px 7px 0 var(--ink);
+
+    transform:rotate(.8deg);
+
+}
+
+
+.player-label{
+
+    font-family:"Patrick Hand",cursive;
+
+    color:var(--pink-dark);
+
+    font-size:20px;
+
+}
+
+
+.player-box h2{
+
+    font-family:"Bangers",cursive;
+
+    font-size:42px;
+
+    margin:8px 0 20px;
+
+}
+
+
+.player-box input{
+
+    width:90%;
+
+    padding:15px 20px;
+
+    border:3px solid var(--ink);
+
+    border-radius:50px;
+
+    outline:none;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:17px;
+
+    text-align:center;
+
+    background:#fff;
+
+}
+
+
+.player-box input:focus{
+
+    box-shadow:4px 4px 0 var(--pink);
+
+}
+
+
+.player-box p{
+
+    margin-top:12px;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:18px;
+
+    opacity:.65;
+
+}
+
+
+/* =====================================================
+   CAMERA CARD
+===================================================== */
+
+.camera-card{
+
+    position:relative;
+
+    max-width:850px;
+
+    margin:auto;
+
+    background:var(--paper);
+
+    border:4px solid var(--ink);
+
+    border-radius:30px;
+
+    padding:15px;
+
+    box-shadow:12px 12px 0 var(--pink-dark);
+
+    transform:rotate(-.6deg);
+
+}
+
+
+.tape{
+
+    position:absolute;
+
+    width:130px;
+
+    height:35px;
+
+    background:rgba(255,216,77,.8);
+
+    top:-22px;
+
+    left:50%;
+
+    transform:translateX(-50%) rotate(-3deg);
+
+    border:2px dashed var(--ink);
+
+    z-index:5;
+
+}
+
+
+.video-wrapper{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:#111;
+
+    min-height:300px;
+
+}
+
+
+video{
+
+    width:100%;
+
+    display:block;
+
+    transform:scaleX(-1);
+
+}
+
+
+canvas{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    transform:scaleX(-1);
+
+}
+
+
+.challenge-timer{
+
+    position:absolute;
+
+    top:20px;
+
+    right:20px;
+
+    background:var(--yellow);
+
+    border:3px solid var(--ink);
+
+    border-radius:50%;
+
+    width:78px;
+
+    height:78px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-family:"Bangers",cursive;
+
+    font-size:35px;
+
+    box-shadow:4px 4px 0 var(--ink);
+
+    z-index:5;
+
+}
+
+
+.live-counter{
+
+    position:absolute;
+
+    top:20px;
+
+    left:20px;
+
+    background:var(--green);
+
+    border:3px solid var(--ink);
+
+    border-radius:18px;
+
+    padding:10px 18px;
+
+    font-weight:700;
+
+    box-shadow:4px 4px 0 var(--ink);
+
+    z-index:5;
+
+}
+
+
+.camera-message{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:28px;
+
+    pointer-events:none;
+
+    text-align:center;
+
+    padding:30px;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+
+    max-width:850px;
+
+    margin:45px auto 0;
+
+}
+
+
+.stat{
+
+    background:white;
+
+    border:3px solid var(--ink);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    text-align:center;
+
+    box-shadow:6px 6px 0 var(--ink);
+
+}
+
+
+.stat:nth-child(1){
+
+    background:#ffe6f1;
+
+    transform:rotate(-2deg);
+
+}
+
+
+.stat:nth-child(2){
+
+    background:#e5f8ff;
+
+    transform:rotate(1deg);
+
+}
+
+
+.stat:nth-child(3){
+
+    background:#fff4c9;
+
+    transform:rotate(2deg);
+
+}
+
+
+.stat-title{
+
+    font-size:12px;
+
+    font-weight:700;
+
+    opacity:.55;
+
+    letter-spacing:1px;
+
+}
+
+
+.stat-value{
+
+    font-family:"Bangers",cursive;
+
+    font-size:45px;
+
+    margin-top:5px;
+
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.button-area{
+
+    text-align:center;
+
+    margin-top:45px;
+
+}
+
+
+button{
+
+    border:3px solid var(--ink);
+
+    border-radius:50px;
+
+    padding:16px 38px;
+
+    font-family:"DM Sans",sans-serif;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    background:var(--pink);
+
+    color:white;
+
+    box-shadow:6px 6px 0 var(--ink);
+
+    transition:.15s;
+
+}
+
+
+button:hover{
+
+    transform:translateY(-3px) rotate(-1deg);
+
+}
+
+
+button:active{
+
+    transform:translate(3px,3px);
+
+    box-shadow:2px 2px 0 var(--ink);
+
+}
+
+
+button:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+
+.status{
+
+    margin-top:18px;
+
+    font-size:14px;
+
+    opacity:.65;
+
+}
+
+
+/* =====================================================
+   RESULT
+===================================================== */
+
+.result-section{
+
+    display:none;
+
+    padding:20px 0 120px;
+
+}
+
+
+.result-card{
+
+    max-width:700px;
+
+    margin:auto;
+
+    background:var(--paper);
+
+    border:4px solid var(--ink);
+
+    border-radius:30px;
+
+    padding:45px 30px;
+
+    text-align:center;
+
+    box-shadow:12px 12px 0 var(--purple);
+
+    transform:rotate(.5deg);
+
+}
+
+
+.result-top{
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:24px;
+
+}
+
+
+.result-card h2{
+
+    font-family:"Bangers",cursive;
+
+    font-size:75px;
+
+    color:var(--pink-dark);
+
+    margin:5px 0 15px;
+
+    -webkit-text-stroke:2px var(--ink);
+
+}
+
+
+.player-result{
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:32px;
+
+    margin-bottom:15px;
+
+}
+
+
+.big-score{
+
+    font-family:"Bangers",cursive;
+
+    font-size:100px;
+
+    line-height:1;
+
+    color:var(--ink);
+
+}
+
+
+.score-label{
+
+    font-weight:700;
+
+    opacity:.55;
+
+    letter-spacing:2px;
+
+}
+
+
+.result-info{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    margin:30px 0;
+
+}
+
+
+.result-pill{
+
+    padding:12px 20px;
+
+    border:2px solid var(--ink);
+
+    border-radius:30px;
+
+    background:#fff;
+
+    font-weight:700;
+
+}
+
+
+.rank{
+
+    font-family:"Bangers",cursive;
+
+    font-size:42px;
+
+    color:var(--pink-dark);
+
+}
+
+
+.comment{
+
+    margin:25px auto;
+
+    max-width:550px;
+
+    background:#fff0a8;
+
+    border:3px solid var(--ink);
+
+    padding:22px;
+
+    border-radius:20px;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:27px;
+
+    box-shadow:5px 5px 0 var(--ink);
+
+}
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+.leaderboard{
+
+    padding:30px 0 130px;
+
+}
+
+
+.leaderboard-title{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+
+.leaderboard-title h2{
+
+    font-family:"Bangers",cursive;
+
+    font-size:65px;
+
+}
+
+
+.leaderboard-title p{
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:21px;
+
+}
+
+
+.leader-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    max-width:800px;
+
+    margin:auto;
+
+}
+
+
+.leader-row{
+
+    display:grid;
+
+    grid-template-columns:70px 1fr 120px;
+
+    align-items:center;
+
+    padding:17px 20px;
+
+    background:white;
+
+    border:3px solid var(--ink);
+
+    border-radius:18px;
+
+    box-shadow:5px 5px 0 var(--ink);
+
+}
+
+
+.leader-position{
+
+    font-family:"Bangers",cursive;
+
+    font-size:32px;
+
+}
+
+
+.leader-name{
+
+    font-weight:700;
+
+    font-size:18px;
+
+}
+
+
+.leader-score{
+
+    font-family:"Bangers",cursive;
+
+    font-size:32px;
+
+    text-align:right;
+
+    color:var(--pink-dark);
+
+}
+
+
+.leader-row:nth-child(1){
+
+    background:#fff0a8;
+
+    transform:scale(1.03) rotate(-.5deg);
+
+}
+
+
+.leader-row:nth-child(2){
+
+    background:#e8f4ff;
+
+}
+
+
+.leader-row:nth-child(3){
+
+    background:#ffe7ef;
+
+}
+
+
+.empty-board{
+
+    text-align:center;
+
+    padding:30px;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:22px;
+
+    opacity:.6;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+
+    padding:30px;
+
+    text-align:center;
+
+    font-family:"Patrick Hand",cursive;
+
+    font-size:20px;
+
+    opacity:.65;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:700px){
+
+    .hero h1{
+
+        font-size:95px;
+
+        -webkit-text-stroke:3px var(--ink);
+
+        text-shadow:5px 5px 0 var(--ink);
+
+    }
+
+
+    .hero-subtitle{
+
+        font-size:23px;
+
+    }
+
+
+    .doodle{
+
+        font-size:35px;
+
+    }
+
+
+    .arena-title h2{
+
+        font-size:55px;
+
+    }
+
+
+    .stats{
+
+        grid-template-columns:1fr;
+
+        max-width:400px;
+
+    }
+
+
+    .result-card h2{
+
+        font-size:55px;
+
+    }
+
+
+    .big-score{
+
+        font-size:80px;
+
+    }
+
+
+    .leaderboard-title h2{
+
+        font-size:50px;
+
+    }
+
+
+    .leader-row{
+
+        grid-template-columns:55px 1fr 90px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="nav-logo">
+        BLINK-IT!
+    </div>
+
+    <div class="nav-pill">
+        👁️ 15 SEC CHALLENGE
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     HERO / TITLE PAGE
+===================================================== -->
+
+<section class="hero">
+
+    <div class="doodle one">👁️</div>
+
+    <div class="doodle two">✨</div>
+
+    <div class="doodle three">💅</div>
+
+    <div class="doodle four">👀</div>
+
+
+    <div class="hero-content">
+
+        <div class="sticker">
+            ✦ THE MOST IMPORTANT USELESS TEST ✦
+        </div>
+
+
+        <h1>
+            BLINK<span>-IT!</span>
+        </h1>
+
+
+        <div class="hero-subtitle">
+
+            How fast can your eyes betray you?
+
+            <br>
+
+            Let's find out. 👁️
+
+        </div>
+
+
+        <div class="hero-small">
+
+            No studying. No talent. Just blinking.
+
+        </div>
+
+    </div>
+
+
+    <a href="#intro" class="scroll-btn">
+
+        SCROLL TO ENTER THE BLINK ZONE
+
+        <span class="scroll-arrow">
+            ↓
+        </span>
+
+    </a>
+
+</section>
+
+
+
+<!-- =====================================================
+     INTRO
+===================================================== -->
+
+<section class="intro" id="intro">
+
+<div class="container">
+
+    <div class="section-label">
+
+        WELCOME TO THE COMPLETELY UNNECESSARY
+
+    </div>
+
+
+    <h2>
+        BLINK ARENA 👁️
+    </h2>
+
+
+    <p>
+
+        Your mission is simple.
+
+        Sit in front of your camera, enter your name,
+        press start, and blink like your life depends on it.
+
+        You have exactly <b>15 seconds</b>.
+
+        At the end, BLINK-IT! will judge your performance
+        with absolutely no scientific authority whatsoever.
+
+    </p>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ARENA
+===================================================== -->
+
+<section class="arena">
+
+<div class="container">
+
+
+    <div class="arena-title">
+
+        <div class="section-label">
+            ROUND 01
+        </div>
+
+        <h2>
+            READY TO BLINK?
+        </h2>
+
+        <p>
+            Look at the camera. Try not to look suspicious.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= NAME ================= -->
+
+    <div class="player-box">
+
+        <div class="player-label">
+            ✦ FIRST, TELL US WHO YOU ARE ✦
+        </div>
+
+
+        <h2>
+            What's your blinking name?
+        </h2>
+
+
+        <input
+            type="text"
+            id="playerName"
+            maxlength="20"
+            placeholder="Enter your name..."
+            autocomplete="off"
+        >
+
+
+        <p>
+            Don't worry. We won't judge your blinking.
+            Probably.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= CAMERA ================= -->
+
+    <div class="camera-card">
+
+        <div class="tape"></div>
+
+
+        <div class="video-wrapper">
+
+            <video
+                id="video"
+                autoplay
+                playsinline>
+            </video>
+
+
+            <canvas id="canvas"></canvas>
+
+
+            <div class="live-counter">
+
+                👁️ Blinks:
+
+                <span id="liveBlinks">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                class="challenge-timer"
+                id="challengeTimer">
+
+                15
+
+            </div>
+
+
+            <div
+                class="camera-message"
+                id="cameraMessage">
+
+                Camera is getting ready...
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= STATS ================= -->
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                BLINKS
+            </div>
+
+            <div
+                class="stat-value"
+                id="blinkCount">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                EYE ASPECT RATIO
+            </div>
+
+            <div
+                class="stat-value"
+                id="earValue">
+
+                0.00
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                EYE STATUS
+            </div>
+
+            <div
+                class="stat-value"
+                id="eyeStatus">
+
+                —
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= START BUTTON ================= -->
+
+    <div class="button-area">
+
+        <button
+            id="startButton"
+            onclick="startChallenge()">
+
+            🚀 START BLINK TEST
+
+        </button>
+
+
+        <div
+            class="status"
+            id="systemStatus">
+
+            Initialising camera...
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     RESULT
+===================================================== -->
+
+<section
+    class="result-section"
+    id="resultSection">
+
+<div class="container">
+
+    <div class="result-card">
+
+
+        <div class="result-top">
+            YOUR OFFICIAL
+        </div>
+
+
+        <h2>
+            BLINK REPORT
+        </h2>
+
+
+        <div
+            class="player-result"
+            id="playerResult">
+
+            👤 Player
+
+        </div>
+
+
+        <div
+            class="big-score"
+            id="finalBlinks">
+
+            0
+
+        </div>
+
+
+        <div class="score-label">
+
+            BLINKS IN 15 SECONDS
+
+        </div>
+
+
+        <div class="result-info">
+
+
+            <div class="result-pill">
+
+                ⏱️ Time:
+
+                <span id="finalTime">
+                    15s
+                </span>
+
+            </div>
+
+
+            <div class="result-pill">
+
+                👁️ Blinks:
+
+                <span id="finalCount">
+                    0
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="rank"
+            id="rank">
+
+            BLINK NOVICE
+
+        </div>
+
+
+        <div
+            class="comment"
+            id="comment">
+
+            Your eyes have officially entered the chat.
+
+        </div>
+
+
+        <button onclick="tryAgain()">
+
+            🔄 BLINK AGAIN
+
+        </button>
+
+
+    </div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     LEADERBOARD
+===================================================== -->
+
+<section class="leaderboard">
+
+<div class="container">
+
+
+    <div class="leaderboard-title">
+
+        <div class="section-label">
+
+            THE COMPLETELY UNNECESSARY
+
+        </div>
+
+
+        <h2>
+            🏆 BLINK LEADERBOARD
+        </h2>
+
+
+        <p>
+
+            Blink more.
+
+            Rise higher.
+
+            Achieve absolutely nothing.
+
+        </p>
+
+    </div>
+
+
+    <div
+        id="leaderList"
+        class="leader-list">
+
+        <div class="empty-board">
+
+            No blink legends yet 👁️
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    Made with 👁️, questionable science
+    & unnecessary confidence.
+
+    <br><br>
+
+    © BLINK-IT!
+
+</footer>
+
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const video =
+    document.getElementById("video");
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+const blinkCountElement =
+    document.getElementById("blinkCount");
+
+
+const liveBlinks =
+    document.getElementById("liveBlinks");
+
+
+const earElement =
+    document.getElementById("earValue");
+
+
+const eyeStatusElement =
+    document.getElementById("eyeStatus");
+
+
+const systemStatus =
+    document.getElementById("systemStatus");
+
+
+const startButton =
+    document.getElementById("startButton");
+
+
+const challengeTimer =
+    document.getElementById("challengeTimer");
+
+
+const cameraMessage =
+    document.getElementById("cameraMessage");
+
+
+const resultSection =
+    document.getElementById("resultSection");
+
+
+const playerNameInput =
+    document.getElementById("playerName");
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+const EAR_THRESHOLD = 0.30;
+
+const CONSEC_FRAMES = 4;
+
+const TEST_DURATION = 15;
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let blinkCounter = 0;
+
+let frameCounter = 0;
+
+let challengeRunning = false;
+
+let timeLeft = TEST_DURATION;
+
+let countdownInterval = null;
+
+let playerName = "";
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+let leaderboard =
+    JSON.parse(
+        localStorage.getItem("blinkLeaderboard")
+    ) || [];
+
+
+/* =====================================================
+   EYE LANDMARKS
+===================================================== */
+
+const RIGHT_EAR = [
+
+    33,
+    159,
+    158,
+    133,
+    153,
+    145
+
+];
+
+
+const LEFT_EAR = [
+
+    362,
+    380,
+    374,
+    263,
+    386,
+    385
+
+];
+
+
+const RIGHT_EYE = [
+
+    33,7,163,144,145,153,
+    154,155,133,173,157,
+    158,159,160,161,246
+
+];
+
+
+const LEFT_EYE = [
+
+    362,382,381,380,374,373,
+    390,249,263,466,388,
+    387,386,385,384,398
+
+];
+
+
+/* =====================================================
+   DISTANCE
+===================================================== */
+
+function distance(p1,p2){
+
+    const dx =
+        p1.x - p2.x;
+
+    const dy =
+        p1.y - p2.y;
+
+    return Math.sqrt(
+        dx * dx + dy * dy
+    );
+
+}
+
+
+/* =====================================================
+   EAR
+===================================================== */
+
+function eyeAspectRatio(points,indexes){
+
+    const A =
+        distance(
+            points[indexes[1]],
+            points[indexes[5]]
+        );
+
+
+    const B =
+        distance(
+            points[indexes[2]],
+            points[indexes[4]]
+        );
+
+
+    const C =
+        distance(
+            points[indexes[0]],
+            points[indexes[3]]
+        );
+
+
+    return (A + B) / (2 * C);
+
+}
+
+
+/* =====================================================
+   BLINK DETECTION
+===================================================== */
+
+function updateBlink(ear){
+
+    if(!challengeRunning)
+        return;
+
+
+    if(ear < EAR_THRESHOLD){
+
+        frameCounter++;
+
+    }
+
+    else{
+
+        if(
+            frameCounter >=
+            CONSEC_FRAMES
+        ){
+
+            blinkCounter++;
+
+            blinkCountElement.textContent =
+                blinkCounter;
+
+            liveBlinks.textContent =
+                blinkCounter;
+
+        }
+
+        frameCounter = 0;
+
+    }
+
+}
+
+
+/* =====================================================
+   DRAW EYE
+===================================================== */
+
+function drawEye(points,eye,color){
+
+    eye.forEach(index=>{
+
+        const point =
+            points[index];
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            point.x * canvas.width,
+
+            point.y * canvas.height,
+
+            3,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.fillStyle = color;
+
+        ctx.fill();
+
+    });
+
+}
+
+
+/* =====================================================
+   MEDIAPIPE RESULTS
+===================================================== */
+
+function onResults(results){
+
+    canvas.width =
+        video.videoWidth;
+
+    canvas.height =
+        video.videoHeight;
+
+
+    ctx.clearRect(
+
+        0,
+        0,
+        canvas.width,
+        canvas.height
+
+    );
+
+
+    if(
+
+        !results.multiFaceLandmarks ||
+
+        results.multiFaceLandmarks.length === 0
+
+    ){
+
+        systemStatus.textContent =
+            "⚠️ No face detected";
+
+        return;
+
+    }
+
+
+    const landmarks =
+        results.multiFaceLandmarks[0];
+
+
+    const rightEAR =
+        eyeAspectRatio(
+            landmarks,
+            RIGHT_EAR
+        );
+
+
+    const leftEAR =
+        eyeAspectRatio(
+            landmarks,
+            LEFT_EAR
+        );
+
+
+    const ear =
+        (rightEAR + leftEAR) / 2;
+
+
+    earElement.textContent =
+        ear.toFixed(3);
+
+
+    updateBlink(ear);
+
+
+    let eyeColor;
+
+
+    if(ear < EAR_THRESHOLD){
+
+        eyeStatusElement.textContent =
+            "CLOSED";
+
+        eyeStatusElement.style.color =
+            "#ff6464";
+
+        eyeColor =
+            "#ff6464";
+
+    }
+
+    else{
+
+        eyeStatusElement.textContent =
+            "OPEN";
+
+        eyeStatusElement.style.color =
+            "#4cd97b";
+
+        eyeColor =
+            "#4cd97b";
+
+    }
+
+
+    drawEye(
+        landmarks,
+        RIGHT_EYE,
+        eyeColor
+    );
+
+
+    drawEye(
+        landmarks,
+        LEFT_EYE,
+        eyeColor
+    );
+
+
+    if(challengeRunning){
+
+        systemStatus.textContent =
+            "🟢 BLINK MODE ACTIVE";
+
+    }
+
+    else{
+
+        systemStatus.textContent =
+            "🟢 Camera ready — press start";
+
+    }
+
+}
+
+
+/* =====================================================
+   FACE MESH
+===================================================== */
+
+const faceMesh =
+    new FaceMesh({
+
+        locateFile:
+            file =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+
+    });
+
+
+faceMesh.setOptions({
+
+    maxNumFaces:1,
+
+    refineLandmarks:true,
+
+    minDetectionConfidence:0.5,
+
+    minTrackingConfidence:0.5
+
+});
+
+
+faceMesh.onResults(onResults);
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+const camera =
+    new Camera(video,{
+
+        onFrame:async()=>{
+
+            await faceMesh.send({
+
+                image:video
+
+            });
+
+        },
+
+        width:1280,
+
+        height:720
+
+    });
+
+
+camera.start();
+
+
+/* =====================================================
+   START CHALLENGE
+===================================================== */
+
+function startChallenge(){
+
+    playerName =
+        playerNameInput.value.trim();
+
+
+    if(playerName === ""){
+
+        alert(
+            "👁️ Enter your name first, Blink Warrior!"
+        );
+
+        playerNameInput.focus();
+
+        return;
+
+    }
+
+
+    if(challengeRunning)
+        return;
+
+
+    /* Reset */
+
+    blinkCounter = 0;
+
+    frameCounter = 0;
+
+    timeLeft = TEST_DURATION;
+
+
+    challengeRunning = true;
+
+
+    blinkCountElement.textContent =
+        "0";
+
+    liveBlinks.textContent =
+        "0";
+
+
+    challengeTimer.textContent =
+        "15";
+
+
+    challengeTimer.style.background =
+        "var(--yellow)";
+
+    challengeTimer.style.color =
+        "var(--ink)";
+
+
+    startButton.disabled =
+        true;
+
+
+    startButton.textContent =
+        "👁️ BLINKING...";
+
+
+    cameraMessage.style.display =
+        "none";
+
+
+    systemStatus.textContent =
+        "🟢 GO " +
+        playerName +
+        "! BLINK!";
+
+
+    countdownInterval =
+        setInterval(()=>{
+
+            timeLeft--;
+
+
+            challengeTimer.textContent =
+                timeLeft;
+
+
+            if(timeLeft <= 5){
+
+                challengeTimer.style.background =
+                    "var(--red)";
+
+                challengeTimer.style.color =
+                    "white";
+
+            }
+
+
+            if(timeLeft <= 0){
+
+                finishChallenge();
+
+            }
+
+        },1000);
+
+}
+
+
+/* =====================================================
+   FINISH
+===================================================== */
+
+function finishChallenge(){
+
+    clearInterval(
+        countdownInterval
+    );
+
+
+    challengeRunning =
+        false;
+
+
+    frameCounter =
+        0;
+
+
+    startButton.disabled =
+        false;
+
+
+    startButton.textContent =
+        "🚀 START BLINK TEST";
+
+
+    challengeTimer.textContent =
+        "✓";
+
+
+    challengeTimer.style.background =
+        "var(--green)";
+
+
+    challengeTimer.style.color =
+        "var(--ink)";
+
+
+    systemStatus.textContent =
+        "✨ Challenge complete!";
+
+
+    generateResult();
+
+
+    resultSection.style.display =
+        "block";
+
+
+    setTimeout(()=>{
+
+        resultSection.scrollIntoView({
+
+            behavior:"smooth"
+
+        });
+
+    },300);
+
+}
+
+
+/* =====================================================
+   RANK
+===================================================== */
+
+function getBlinkRank(count){
+
+    if(count === 0)
+        return "STATUE MODE";
+
+    if(count <= 3)
+        return "BLINK NOVICE";
+
+    if(count <= 7)
+        return "CASUAL BLINKER";
+
+    if(count <= 12)
+        return "BLINK MACHINE";
+
+    if(count <= 18)
+        return "EYELID ATHLETE";
+
+    if(count <= 25)
+        return "BLINK MENACE";
+
+    return "SUPREME BLINK LORD";
+
+}
+
+
+/* =====================================================
+   FUNNY COMMENTS
+===================================================== */
+
+function getBlinkComment(count){
+
+    if(count === 0){
+
+        return "ZERO BLINKS?! Bro became a mannequin. 👁️";
+
+    }
+
+
+    if(count <= 3){
+
+        return "Your eyelids are still loading...";
+
+    }
+
+
+    if(count <= 7){
+
+        return "Respectable blinking. Very normal behaviour.";
+
+    }
+
+
+    if(count <= 12){
+
+        return "Okayyy! Those eyelids came prepared.";
+
+    }
+
+
+    if(count <= 18){
+
+        return "Your eyelids are working overtime. 💀";
+
+    }
+
+
+    if(count <= 25){
+
+        return "BLINK MENACE DETECTED. 🚨";
+
+    }
+
+
+    return "SUPREME BLINK LORD. Your eyelids need a salary.";
+
+}
+
+
+/* =====================================================
+   RESULT
+===================================================== */
+
+function generateResult(){
+
+    const count =
+        blinkCounter;
+
+
+    /* Save score */
+
+    leaderboard.push({
+
+        name:playerName,
+
+        blinks:count,
+
+        date:Date.now()
+
+    });
+
+
+    /* Highest score first */
+
+    leaderboard.sort(
+
+        (a,b)=>
+            b.blinks - a.blinks
+
+    );
+
+
+    /* Top 10 */
+
+    leaderboard =
+        leaderboard.slice(0,10);
+
+
+    /* Save */
+
+    localStorage.setItem(
+
+        "blinkLeaderboard",
+
+        JSON.stringify(
+            leaderboard
+        )
+
+    );
+
+
+    /* Player position */
+
+    const playerPosition =
+        leaderboard.findIndex(
+
+            player =>
+
+                player.name === playerName &&
+
+                player.blinks === count
+
+        ) + 1;
+
+
+    /* Result */
+
+    document.getElementById(
+        "playerResult"
+    ).textContent =
+        "👤 " + playerName;
+
+
+    document.getElementById(
+        "finalBlinks"
+    ).textContent =
+        count;
+
+
+    document.getElementById(
+        "finalCount"
+    ).textContent =
+        count;
+
+
+    document.getElementById(
+        "finalTime"
+    ).textContent =
+        "15s";
+
+
+    document.getElementById(
+        "rank"
+    ).textContent =
+
+        "🏆 #" +
+        playerPosition +
+        " — " +
+        getBlinkRank(count);
+
+
+    document.getElementById(
+        "comment"
+    ).textContent =
+        getBlinkComment(count);
+
+
+    renderLeaderboard();
+
+}
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+function renderLeaderboard(){
+
+    const list =
+        document.getElementById(
+            "leaderList"
+        );
+
+
+    if(leaderboard.length === 0){
+
+        list.innerHTML = `
+
+            <div class="empty-board">
+
+                No blink legends yet 👁️
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    leaderboard.forEach(
+        (player,index)=>{
+
+
+        let medal;
+
+
+        if(index === 0)
+
+            medal = "🥇";
+
+
+        else if(index === 1)
+
+            medal = "🥈";
+
+
+        else if(index === 2)
+
+            medal = "🥉";
+
+
+        else
+
+            medal =
+                "#" +
+                (index + 1);
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "leader-row";
+
+
+        row.innerHTML = `
+
+            <div class="leader-position">
+
+                ${medal}
+
+            </div>
+
+
+            <div class="leader-name">
+
+                ${escapeHTML(
+                    player.name
+                )}
+
+            </div>
+
+
+            <div class="leader-score">
+
+                ${player.blinks} 👁️
+
+            </div>
+
+        `;
+
+
+        list.appendChild(row);
+
+    });
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(text){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =====================================================
+   TRY AGAIN
+===================================================== */
+
+function tryAgain(){
+
+    resultSection.style.display =
+        "none";
+
+
+    blinkCounter = 0;
+
+    frameCounter = 0;
+
+
+    timeLeft =
+        TEST_DURATION;
+
+
+    challengeTimer.textContent =
+        "15";
+
+
+    challengeTimer.style.background =
+        "var(--yellow)";
+
+
+    challengeTimer.style.color =
+        "var(--ink)";
+
+
+    blinkCountElement.textContent =
+        "0";
+
+
+    liveBlinks.textContent =
+        "0";
+
+
+    eyeStatusElement.textContent =
+        "—";
+
+
+    earElement.textContent =
+        "0.00";
+
+
+    cameraMessage.style.display =
+        "flex";
+
+
+    cameraMessage.textContent =
+        "Camera ready 👁️";
+
+
+    systemStatus.textContent =
+        "🟢 Ready for another round";
+
+
+    document.querySelector(
+        ".arena"
+    ).scrollIntoView({
+
+        behavior:"smooth"
+
+    });
+
+}
+
+
+/* =====================================================
+   LOAD EXISTING LEADERBOARD
+===================================================== */
+
+renderLeaderboard();
+
+
+/* =====================================================
+   CAMERA READY MESSAGE
+===================================================== */
+
+cameraMessage.textContent =
+    "Camera ready 👁️";
+
+</script>
+
+
+</body>
+
+</html>
