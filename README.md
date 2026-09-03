@@ -6,33 +6,33 @@
 
 
 ## Basic Details
-### Team Name: [Wonder Women]
+### Team Name: Wonder Women
 
 
 ### Team Members
-- Member 1: [Femin] - [MEC]
-- Member 2: [Yuktha] - [MEC]
+- Member 1: Femin P B - Model Engineering College
+- Member 2: Yuktha Bose T P - Model Engineering College
 
 ### Project Description
-[A fun webcam based website that detects and count your eyeblinks within 15 seconds]
+A fun webcam based website that detects and count your eyeblinks within 15 seconds
 
 ### The Problem (that doesn't exist)
-[People have no idea how many times they can blink in 15 seconds]
+People have no idea how many times they can blink in 15 seconds
 
 ### The Solution (that nobody asked for)
-[Blink-it detects and counts eye blinks and let the users know their eyeblinks count in 15 seconds]
+Blink-it detects and counts eye blinks and let the users know their eyeblinks count in 15 seconds
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [html]
-- [javascript]
-- [gitandgithub]
-- [webcam]
-
+- html
+- javascript
+- git and github
+- vs code
+  
 For Hardware:
-- [laptop]
-- [built-inwebcam]
+- laptop
+- built-inwebcam
 
 ### Implementation
 For Software:
@@ -41,7 +41,7 @@ For Software:
 cd yufe-project
 
 # Run
-[Open index.html → Right click → Open with Live Server]
+Open index.html → Right click → Open with Live Server
 
 ### Project Documentation
 For Software:
