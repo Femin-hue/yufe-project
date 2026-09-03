@@ -48,13 +48,13 @@ For Software:
 BLINK-IT is a webcam-based web application that detects and counts eye blinks during a 15-second challenge. It uses MediaPipe Face Mesh to track facial landmarks and identifies blinks based on eye movement. The final blink count is converted into a score and rank.
 
 # Screenshots (Add at least 3)
-1 ![alt text](<Screenshot 2026-09-04 041152.png>)
+1 https://github.com/Femin-hue/yufe-project/blob/main/Screenshot%202026-09-04%20041152.png
 BLINK-IT Homepage – The landing page introduces the blink challenge.
 
-2 ![alt text](<Screenshot 2026-09-04 041500.png>)
+2 https://github.com/Femin-hue/yufe-project/blob/main/Screenshot%202026-09-04%20041500.png
 Blink Detection – Real-time webcam detects and counts eye blinks.
 
-3 ![alt text](<Screenshot 2026-09-04 041733.png>)
+3 https://github.com/Femin-hue/yufe-project/blob/main/Screenshot%202026-09-04%20041733.png
 Leaderboard – Displays the top blink scores and player rankings
 
 # Diagrams
