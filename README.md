@@ -59,6 +59,7 @@ Leaderboard – Displays the top blink scores and player rankings
 
 ## Team Contributions
 Yuktha Bose: Implemented webcam access and blink detection
+
 Femin P B: Designed website interface
 
 ---
